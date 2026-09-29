@@ -1,0 +1,57 @@
+# Python / environments / builds
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Credentials / per-machine configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+configs/local/
+*.local.json
+credentials*.json
+token
+tokens/
+
+# Datasets, recordings, model artifacts and run outputs
+/data/
+/datasets/
+/recordings/
+/checkpoints/
+/models/
+/outputs/
+/runs/
+/logs/
+/calibration/
+.cache/
+.huggingface/
+wandb/
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.mp4
+*.avi
+*.mov
+*.wav
+*.flac
+*.parquet
+
+# Editors / operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
