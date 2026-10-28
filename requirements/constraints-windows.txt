@@ -1,0 +1,7 @@
+# Observed on 2026-09-30; selected constraints, not a complete environment lock.
+# PyTorch runtime observed: 2.11.0+cu128. CUDA wheel installation is a separate step.
+lerobot==0.6.1
+rerun-sdk==0.33.1
+draccus==0.11.6
+PyYAML==6.0.3
+torch==2.11.0

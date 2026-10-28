@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cuk-robotics-bimanual"
 version = "0.1.0"
-description = "Project scaffold for SmolVLA bimanual beverage manipulation with dual SO-101 arms"
+description = "LeRobot workflows for SmolVLA bimanual beverage manipulation with dual SO-101 arms"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -14,8 +14,12 @@ authors = [{name = "cuk-robotics contributors"}]
 dependencies = []
 
 [project.optional-dependencies]
-# Provisional integration target. Pin a tested release before collecting data or training.
-robotics = ["lerobot[smolvla]"]
+robotics = ["lerobot[core_scripts,feetech]==0.6.1", "rerun-sdk==0.33.1", "PyYAML==6.0.3"]
+training = ["lerobot[training,smolvla]==0.6.1"]
+
+[project.scripts]
+cuk-robotics = "cuk_robotics.teleoperation.cli:main"
+cuk-camera-preview = "cuk_robotics.cameras.preview:entrypoint"
 
 [project.urls]
 Repository = "https://github.com/cuk-robotics/smolvla-bimanual-manipulation"

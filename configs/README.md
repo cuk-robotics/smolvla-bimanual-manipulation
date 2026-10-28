@@ -1,8 +1,9 @@
-# 설정
+# 설정 파일
 
-`project.example.json`은 프로젝트 자체의 설계 예시이며 LeRobot CLI에 직접 전달하는 설정이 아닙니다.
-`null`과 빈 배열은 미확정 항목입니다. 임의의 포트·장치 ID·관절 한계로 대체하지 않습니다.
+- `hardware/so101_bimanual.example.json`: 공개 구조 예시. 포트·카메라 인덱스가 비어 있어 그대로는 실행되지 않습니다.
+- `local/hardware.json`: 현재 PC의 실제 설정. Git 제외. 보정 경로는 프로젝트 루트 기준으로 해석합니다.
+- `recording/beverage.json`: 데이터셋 ID, 작업 문장, 에피소드 수와 시간.
+- `scripts/check_config.py`는 위 공개 장치 예시와 기록 설정을 검사합니다. 실제 장치를 연결하지 않습니다.
 
-개인 장치 설정은 `configs/local/` 또는 `*.local.json`에 보관합니다.
-기본 상태는 dry run이며, 현재 저장소에는 실물 실행 기능이 없습니다.
-설정의 `hardware_enabled`를 바꾸어도 하드웨어 기능이 구현되거나 검증되는 것은 아닙니다.
+실행 안내는 [operations](../docs/operations.md), 버전은 [dependencies](../docs/dependencies.md)를 참고하세요.
+실제 calibration JSON은 `calibration/so101/`에 두며 Git에 추가하지 않습니다.

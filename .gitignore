@@ -9,20 +9,74 @@ dist/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.tox/
+.nox/
+.hypothesis/
+.ipynb_checkpoints/
+.eggs/
+*.egg
+env/
+envs/
+.conda/
+.pixi/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
 
 # Credentials / per-machine configuration
 .env
 .env.*
 !.env.example
+!.env.*.example
 *.pem
 *.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
 configs/local/
 *.local.json
+*.local.yaml
+*.local.yml
+*.local.toml
+.envrc
 credentials*.json
+secrets*.json
+secrets*.yaml
+secrets*.yml
+secrets/
+.secrets/
 token
+stored_tokens
 tokens/
+hf_token*
+.git-credentials
+.netrc
+_netrc
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+
+# Local AI instructions / task history (repository-specific privacy policy)
+# AGENTS.md can be shared in other projects; this project's copy stays local.
+[Aa][Gg][Ee][Nn][Tt][Ss].md
+[Aa][Gg][Ee][Nn][Tt].md
+[Aa][Gg][Ee][Nn][Tt][Ss].override.md
+/PROJECT_CONTEXT.md
+/PROJECT_CONTEXT.local.md
+/RUN_GUIDE.local.md
+/GEMINI_TO_CODEX.md
+.codex/
+.agents/
+.claude/
+.continue/
+.serena/
+.aider*
+/.mcp.json
+/mcp.json
 
 # Datasets, recordings, model artifacts and run outputs
 /data/
@@ -48,10 +102,38 @@ wandb/
 *.wav
 *.flac
 *.parquet
+*.arrow
+*.mcap
+*.bag
+*.webm
+*.mkv
+*.m4a
 
 # Editors / operating systems
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
+Desktop.ini
 *.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+*.dmp
+*.stackdump
+
+# Calibration variants and root-level local package/download archives
+/calibrations/
+*.rrd
+*.rbl
+/so101_*.zip
+/*.zip
+/*.7z
+/*.tar
+/*.tar.gz
+/*.whl

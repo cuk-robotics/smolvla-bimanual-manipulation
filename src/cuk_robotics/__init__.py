@@ -1,1 +1,1 @@
-"""CUK bimanual robotics project scaffold; importing this package has no device effects."""
+"""CUK bimanual robotics workflows; importing this package has no device effects."""

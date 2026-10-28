@@ -1,1 +1,1 @@
-"""Planned teleoperation interfaces; input hardware has not been selected."""
+"""Official LeRobot workflows for dual SO-101 leader and follower arms."""

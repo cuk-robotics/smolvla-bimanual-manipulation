@@ -1,0 +1,66 @@
+{
+  "robot": {
+    "type": "bi_so_follower",
+    "id": "dual_follower",
+    "calibration_dir": "calibration/so101",
+    "left_arm_config": {
+      "port": null,
+      "max_relative_target": {
+        "shoulder_pan": 5.0,
+        "shoulder_lift": 5.0,
+        "elbow_flex": 5.0,
+        "wrist_flex": 5.0,
+        "wrist_roll": 10.0,
+        "gripper": 5.0
+      }
+    },
+    "right_arm_config": {
+      "port": null,
+      "max_relative_target": {
+        "shoulder_pan": 5.0,
+        "shoulder_lift": 5.0,
+        "elbow_flex": 5.0,
+        "wrist_flex": 2.0,
+        "wrist_roll": 360.0,
+        "gripper": 100.0
+      }
+    },
+    "cameras": {
+      "left_wrist": {
+        "type": "opencv",
+        "index_or_path": null,
+        "width": 640,
+        "height": 480,
+        "fps": 30,
+        "backend": 700
+      },
+      "right_wrist": {
+        "type": "opencv",
+        "index_or_path": null,
+        "width": 640,
+        "height": 480,
+        "fps": 30,
+        "backend": 700
+      },
+      "top": {
+        "type": "opencv",
+        "index_or_path": null,
+        "width": 640,
+        "height": 480,
+        "fps": 30,
+        "backend": 700
+      }
+    }
+  },
+  "teleop": {
+    "type": "bi_so_leader",
+    "id": "dual_leader",
+    "calibration_dir": "calibration/so101",
+    "left_arm_config": {
+      "port": null
+    },
+    "right_arm_config": {
+      "port": null
+    }
+  }
+}

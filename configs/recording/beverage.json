@@ -1,0 +1,7 @@
+{
+  "repo_id": "lmsforAI/so101_bimanual_beverage_trajectories_v1",
+  "single_task": "With the left arm, pour powder into the fixed central bowl and return the powder container. With the right arm, pour water from the plastic beaker into the bowl and return the beaker. With the left arm, pick up the muddler from the glass cup, stir the mixture, and return the muddler to the glass cup.",
+  "num_episodes": 10,
+  "episode_time_s": 180,
+  "reset_time_s": 30
+}

@@ -1,19 +1,40 @@
-# 외부 의존성 및 재현성
+# 환경 및 의존성
 
-기본 프로젝트는 Python 3.12 이상과 표준 라이브러리만 사용합니다.
-선택 의존성 `robotics = ["lerobot[smolvla]"]`는 설치 연결점이며 통합 검증 완료 표시가 아닙니다.
-2026-09-29 확인한 upstream `main`의 Python 요구 조건은 `>=3.12`입니다.
+## 현재 확인한 환경
 
-통합 환경을 마련할 때 다음 순서로 진행합니다.
-1. [LeRobot 설치 안내](https://huggingface.co/docs/lerobot/installation)와 대상 release의 요구 조건 확인.
-2. 별도 환경에서 OS, Python, GPU 드라이버, PyTorch/CUDA 조합 결정.
-3. `python -m pip install -e ".[robotics]"`로 선택 의존성 설치. 대용량 의존성이 포함될 수 있음.
-4. 선택한 버전의 데이터 수집·하드웨어·학습 추가 의존성 확인. `smolvla` extra만으로 모든 하드웨어 기능이 설치된다고 가정하지 않음.
-5. 입출력 매핑, 기본 모델 revision, 전처리와 장치 인터페이스 검증.
-6. 검증한 LeRobot 버전을 정확히 고정하고 OS별 잠금 파일·환경 정보를 기록.
+2026-09-30 로컬 `cuk-robotics` 환경의 설치 정보를 확인했습니다.
 
-현재 잠금 파일과 검증된 GPU/장치 조합은 없습니다. 기본 모델은 별도로 획득하며 자동 다운로드 코드는 없습니다.
-upstream 소스를 vendoring하거나 이 저장소로 복사하지 않습니다.
+| 패키지 | 버전 |
+| --- | --- |
+| Python | 3.12.14 |
+| LeRobot | 0.6.1 |
+| PyTorch | 2.11.0+cu128 |
+| rerun-sdk | 0.33.1 |
+| draccus | 0.11.6 |
+| PyYAML | 6.0.3 |
 
-근거: [upstream pyproject.toml](https://github.com/huggingface/lerobot/blob/main/pyproject.toml),
-[SmolVLA 안내](https://huggingface.co/docs/lerobot/smolvla).
+이 목록은 설치 정보이며 Windows GPU 학습이 검증됐다는 의미가 아닙니다.
+`requirements/constraints-windows.txt`는 주요 버전 제약으로, 전체 환경 잠금 파일이 아닙니다.
+
+## 설치 구분
+
+기본 패키지와 오프라인 검사는 장치 의존성을 요구하지 않습니다.
+
+```bat
+python -m pip install -e .
+python scripts/check_config.py
+python -m unittest discover -s tests -v
+```
+
+새 장치 실행 환경에서는 아래 선택 의존성을 설치합니다. 현재 정상 환경에 다시 설치할 필요는 없습니다.
+
+```bat
+python -m pip install -e ".[robotics]" -c requirements/constraints-windows.txt
+```
+
+`robotics`는 LeRobot의 `core_scripts,feetech`, Rerun, YAML을 포함합니다.
+학습 의존성은 `training`으로 분리했으며 SmolVLA 학습 전 PyTorch/CUDA/OS 호환성을 별도로 확인합니다.
+현재 Rerun 화면 구성은 LeRobot 0.6.1의 비공개 `_build_blueprint`에 의존합니다. 업그레이드하면 `--validate-only`와 영상 표시를 다시 확인해야 합니다.
+upstream 설치 파일을 수정하거나 LeRobot 소스를 프로젝트로 복사하지 않습니다.
+
+설치 근거: [LeRobot 설치 문서](https://huggingface.co/docs/lerobot/installation).
