@@ -21,9 +21,11 @@ scripts/run_robot.py 또는 Windows 배치 파일
 모터 연결·명령·데이터 기록은 설치된 LeRobot이 담당합니다.
 `cameras.preview`는 로봇 연결 없는 브라우저 미리보기입니다.
 `operation`은 카메라 검증·표시 설정·뷰어 시작을 건너뛰고 기존 포트·보정·목표 차이 제한을 사용합니다.
-2026-10-14 오른쪽 그리퍼 부품 교체 후에는 로컬 보정 파일의 `drive_mode`만 반전했으며 공식 LeRobot 변환을 사용합니다.
+장치별 보정은 로컬 파일로 관리하며 공식 LeRobot 변환을 사용합니다.
 `teleoperation.inference`는 로컬 정책·원본 데이터셋의 feature 이름·순서·차원·영상 매핑을 검사한 뒤 공식 rollout에 위임합니다.
 `scripts/windows/train_powder.bat`는 로컬 학습 설정을 읽어 공식 trainer를 실행합니다. 설치 패키지 소스를 복사하거나 수정하지 않습니다.
+
+선택적 `teleoperation.top_pair`는 record 세션에서 하나의 top 관측으로 원본·PNG 합성 영상을 만들어 4영상 feature를 제공합니다. `top_variants`는 종료된 수집본을 재인코딩 없이 raw/masked 3영상 사본으로 내보내고, `paired_upload`는 두 사본 준비·검사 후 요청된 업로드만 수행합니다. 준비 전용 옵션은 원격 전송 전에 종료합니다. [수집·변환](paired-top-recording.md)과 [배포](huggingface.md)의 책임을 구분합니다.
 
 ## 개발 예정
 

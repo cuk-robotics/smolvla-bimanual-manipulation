@@ -1,81 +1,63 @@
-# 저장소 구조와 공유 기준
+# 저장소 관리와 공유 범위
 
-현재 실행 경로를 기준으로 관리합니다. 로봇 제어 구현은 `src/`, 진입점은 `scripts/`, 안내는 `docs/`에 둡니다.
-실행되지 않는 계획용 패키지나 빈 자료 폴더를 미리 만들지 않습니다.
+<a id="repositories"></a>
+## 저장소 역할
 
-## 디렉터리
-
-```text
-README.md                       # 프로젝트 개요·문서 진입점
-src/cuk_robotics/                # 설정 로더·카메라·공식 LeRobot 실행기
-scripts/                        # Python 진입점·검사
-  windows/                      # 기존 Windows 실행 편의 파일
-configs/
-  hardware/                     # 포트·카메라 번호가 비어 있는 공개 예시
-  recording/                    # 기록 기본 작업 문장·에피소드 설정
-  local/                        # 실제 PC 설정, Git 제외
-docs/                           # 현재 운영·수집·추론·환경·데이터 문서
-  archive/                      # 과거 명령·특정 세션·연구 검토 기록
-tests/                          # 장치 연결 없는 검사
-requirements/                   # 주요 의존성 버전 제약
-templates/                      # 데이터 카드 양식
-.github/workflows/              # 오프라인 CI
-```
-
-로컬 `calibration/`, `data/`, `models/`, `outputs/`는 원래 경로에 유지합니다.
-LeRobot 데이터셋의 data/meta/videos 내부 구조와 모델·보정 경로는 정리 목적으로 변경하지 않습니다.
-
-## 공개와 로컬 보관
-
-| 구분 | 대상 |
+| 저장소 | 담당 범위 |
 | --- | --- |
-| 공개 | 소스, 실행·검사 스크립트, 테스트, CI, 의존성, 설정 예시, 기록 설정, 문서·HTML, 데이터 카드 양식 |
-| 로컬 | configs/local, calibration, data·datasets·recordings, models·checkpoints·runs, outputs·logs·캐시·가상환경 |
-| 로컬 | .env·인증정보·개인 키, AGENTS.md·PROJECT_CONTEXT.md, AI 도구 로컬 상태, 루트 다운로드 압축파일 |
+| smolvla-bimanual-manipulation | 원격조작·연습·기록·수집 장치 설정과 품질 확인 |
+| [beverage-autonomy](https://github.com/cuk-robotics/beverage-autonomy) | 학습·평가·최종 추론의 통합 대상 |
+| 조직 `.github` | 조직 소개와 공통 GitHub 구성 |
 
-공개 Hub 계정명·repo ID는 인증 토큰과 구분합니다. 문서에 사용한 PC 경로·COM 번호는 예시 또는 당시 조건이며 다른 PC에서 그대로 적용하지 않습니다.
-`.env.example`은 비밀 값이 없는 예시만 허용합니다. 일반 JSON·Markdown·이미지라는 이유만으로 일괄 제외하지 않습니다.
-AGENTS.md의 제외는 이 프로젝트의 로컬 협업 기록 분리 방침입니다.
+2026-10-28 저장소 분리 기록 이후 이 저장소의 기존 학습 배치·추론 실행기는 유지되어 있습니다. 새 저장소로 실행 코드 이전과 실물 검증이 완료되었다고 간주하지 않습니다.
 
-`.gitignore`는 이미 추적한 파일이나 과거 커밋을 제거하지 않습니다. 다음 명령을 프로젝트 루트에서 실행합니다.
+이전할 때는 출처 commit·로컬 변경·해시, 의존성, 정책/데이터 feature·정규화·task, Hub의 고정 revision을 기록합니다. 원본·파생본의 중복 시연과 평가 누수를 확인하고 장치 없는 검사→저장 관측 추론→승인된 실물 평가 순서로 검증합니다. 이전 완료 후 기능별 관리 저장소를 하나로 정합니다.
+
+## 기존 공개 이력
+
+| 커밋 | 작업 범위 |
+| --- | --- |
+| `a0203f2` | 초기 오프라인 골격·설정 예시·기본 검사 |
+| `57af065` | 원격 저장소의 README 초기화 |
+| `109d058` | 수집 환경 통합 기준점: 장치 설정, 조작·카메라, 시연 기록, 기존 추론·워밍업, 학습 보조, 공유·CI·문서 |
+| `0b3b924` | 두 초기 이력을 연결한 병합; 파일 구성은 `109d058`과 동일 |
+
+`109d058`은 여러 기능을 한 번에 도입한 통합 커밋입니다. 이후 변경은 독립적인 기능과 관련 테스트, CI, 문서 정리를 목적별 커밋으로 관리합니다. 코드 도입과 실물 성능 검증은 구분합니다.
+
+## 폴더와 문서 역할
+
+| 경로 | 역할 |
+| --- | --- |
+| `src/cuk_robotics/` | 공식 LeRobot 위임·장치 구성·표시·내보내기 구현 |
+| `scripts/`, `tests/` | 실행 진입점과 장치 연결 없는 검사 |
+| `configs/hardware/`, `configs/recording/` | 공유 가능한 예시와 기록 기본값 |
+| `docs/operations.md` | 실행·종료·resume |
+| `docs/recording.md` | 작업대·task·수집 및 채택 기준 |
+| `docs/paired-top-recording.md` | 선택적 4영상 기록·3영상 변환 |
+| `docs/data-contract.md`, `docs/huggingface.md` | 데이터 규격과 배포 절차 |
+| `docs/datasets.md` | 공개 데이터 ID·회차 대응·revision·검증 범위 |
+| `docs/*dataset-library.html` | 팀원용 데이터셋 조회·다운로드 화면 |
+| `docs/local/` | **Git 제외** PC별 명령·과거 실험/날짜별 작업 기록 |
+
+전체 문서 입구는 [README](../README.md)입니다. 공통 절차를 날짜별 문서에 복제하지 않고, 과거 실행 기록은 현재 기준과 분리합니다. 내부용 문서에서만 로컬 파일 경로를 연결합니다.
+
+## Git 포함·제외 기준
+
+공유 대상은 소스·테스트·의존성·공개 설정 예시·재현 가능한 운영 문서·검토한 다운로드 HTML입니다. Hugging Face 공개 ID와 revision은 재현성 정보이므로 포함합니다.
+
+Git 제외 대상은 `configs/local/`, 보정, 데이터·영상, 모델·학습 출력, 로그·검증 증거, 인증정보, AI 작업 이력, `docs/local/`, `*.local.md`입니다. 이 PC의 사용자명·절대 경로·미완료 실행 메모는 로컬 문서에서 관리합니다. 마스크 PNG와 데이터 카드를 포함한 공개 배포 파일은 별도 검토하며 데이터셋 전체를 Git에 넣지 않습니다.
 
 ```text
 git status --short
-git ls-files -ci --exclude-standard
 git diff --check
 python scripts/check_git_hygiene.py
+git ls-files -ci --exclude-standard
 ```
 
-공유 검사는 현재 추적·미추적 공개 후보의 일반적인 인증정보 패턴·대용량 파일·문서 링크를 검사합니다.
-과거 커밋 전체나 모든 비밀정보 유형의 부재를 보증하는 검사는 아닙니다.
+`.gitignore`는 이미 추적 중인 파일을 자동 제외하지 않습니다. 제외 대상이 이미 추적되어 있으면 원본을 백업·로컬 위치로 옮기고 삭제 변경을 검토해야 합니다. 인증정보가 과거 commit에 있다면 ignore만으로 제거되지 않으며 폐기·교체와 별도 이력 처리가 필요합니다.
 
-## 2026-10-28 정리
+검사 스크립트는 현재 추적·미추적 공개 후보의 일반 인증정보 패턴, 로컬 문서 링크, 큰 파일, ignore 분류와 추적 중인 제외 파일을 점검합니다. 과거 Git 이력 전체나 모든 비밀 형식을 검사하는 도구는 아닙니다.
 
-- README의 과거 일지를 걷어내고 현재 목적·실행 모드·문서 진입점을 정리했습니다.
-- 루트 RUN_GUIDE와 운영 문서의 중복 실행 설명은 operations로 통합하고 장애 점검은 troubleshooting으로 분리했습니다.
-- 최신 수집·작업환경·추론·학습 안내는 날짜 없는 고정 문서명으로 모았습니다.
-- 이전 모델·단계별 50개 계획·특정 이어쓰기 세션·연구 검토는 archive로 옮겼습니다.
-- repository-layout·change-history·git-hygiene의 중복 구조·공유 안내는 이 문서로 통합했습니다.
-- 실제 실행에 쓰이지 않는 configs/project.example.json과 이를 위한 옛 검사를 제거하고, check_config는 실제 공개 장치 예시·기록 설정 검사로 교체했습니다.
-- 이미지가 없던 assets의 자리표시 README를 정리했습니다. 실제 공개 이미지가 생길 때 다시 추가할 수 있습니다.
-- 모터 제어·장치 설정·보정·데이터·모델·배치 진입점과 기존 사용자 변경은 보존했습니다.
+## 로컬 보관과 복구
 
-정리 전 공개 파일 전체와 로컬 인수인계는 Git 제외 `outputs/repository_cleanup_20261028/before/`에 바이트 그대로 백업했습니다.
-파일별 SHA-256·이동 목록·보호 파일 검증·검사 로그는 같은 상위 폴더에 보관합니다.
-과거 build/dist·빈 패키지 정리의 상세 기록도 이 백업의 이전 change-history에서 확인할 수 있습니다.
-커밋·push는 변경 내용을 사용자에게 보여드린 후 진행합니다.
-
-## 과거 기록
-
-아래 문서는 당시 조건과 실험 근거입니다. 현재 실행 안내로 자동 적용하지 않습니다.
-
-- [2026-10-07 추론·실물 관찰](archive/inference-20261007.md)
-- [2026-10-08 모델 선택](archive/inference-models-20261008.md): 기존 infer_beverage.bat의 w6·tkpota 선택에 대응
-- [과거 단계별 50개 수집](archive/subtask-recording-20261006.md)
-- [특정 녹차 세션 이어쓰기](archive/resume-greentea-20261019.md)
-- [카메라 FPS 실측](archive/camera-fps-20261020.md)
-- [Matcha Bot 비교](archive/matcha-bot-comparison.md)
-- [가루 데이터 개선 검토](archive/powder-data-improvement.md)
-- [장기 작업 정책 검토](archive/long-horizon-strategy.md)
-
-현재 작업은 [운영](operations.md)·[수집](recording.md)·[추론](inference.md)을 따릅니다.
+2026-10-31 정리 전 원문·변경분·해시 목록은 Git 제외 `outputs/docs_cleanup_20261031/`에 보관합니다. 날짜별 원문과 기존 archive는 `docs/local/history/`, `docs/local/archive/`에, PC 전용 추론 HTML은 `docs/local/inference-commands.html`에 남깁니다. 삭제 표시된 공개 문서는 이 로컬 사본과 백업으로 복구할 수 있습니다. 새 clone에는 로컬 보관물이 포함되지 않습니다.

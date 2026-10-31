@@ -10,13 +10,12 @@ OBS에서 탑뷰 장면과 가상 카메라 출력을 확인하고 다른 카메
 
 2026-10-20 카메라 전용 측정에서 손목 하나의 YUY2 수신은 약 7~8 FPS, MJPG에서는 두 대 모두 약 30 FPS였습니다.
 practice는 MJPG를 기본 사용합니다. record·preview에서는 필요할 때 명시적으로 선택합니다.
-실측 조건과 한계는 [카메라 측정 기록](archive/camera-fps-20261020.md)에 보존합니다.
+이 수치는 30~60초 카메라 전용 수신 측정이며 모터·Rerun·기록 부하는 포함하지 않습니다. OBS top의 수신률과 실제 영상 변경률도 달랐으므로 센서 FPS로 해석하지 않습니다. 상세 이력은 Git 제외 `docs/local/archive/camera-fps-20261020.md`와 `outputs/camera_fps_20261020/`에 보존합니다.
 
-현재 PC의 **PowerShell**, 모터 없이 10초 확인:
+환경을 활성화한 **CMD/PowerShell**, 저장소 루트에서 모터 없이 10초 확인:
 
-```powershell
-Set-Location 'E:\Desktop\smolvla-bimanual-manipulation'
-& 'C:\miniforge3\envs\cuk-robotics\python.exe' scripts/run_robot.py preview --wrist-fourcc MJPG --preview-seconds 10
+```text
+python scripts/run_robot.py preview --wrist-fourcc MJPG --preview-seconds 10
 ```
 
 `latest frame is too old`는 최신 프레임 수신이 허용 시간보다 늦었다는 뜻입니다.
@@ -43,10 +42,10 @@ Exiting이나 업로드 완료 문구만으로 목표 시연 수집 완료를 �
 
 operation·practice·record는 첫 경고와 이후 최대 30초마다 한 번 콘솔에 표시하고 생략 개수를 요약합니다.
 record는 녹화·재배치·재녹화·종료 단계를 표시합니다. 모터 목표 보호와 action 저장 경로는 공식 LeRobot에 위임합니다.
-카메라·통신 오류와 traceback은 이 필터로 숨기지 않습니다. 전체 경고 출력 설정을 장치 없이 확인하는 **PowerShell** 명령:
+카메라·통신 오류와 traceback은 이 필터로 숨기지 않습니다. 전체 경고 출력 설정을 장치 없이 확인하는 **CMD/PowerShell** 명령:
 
-```powershell
-& 'C:\miniforge3\envs\cuk-robotics\python.exe' 'E:\Desktop\smolvla-bimanual-manipulation\scripts\run_robot.py' record --verbose-target-warnings --validate-only
+```text
+python scripts/run_robot.py record --verbose-target-warnings --validate-only
 ```
 
 ## 밝은 조명에서 영상 포화

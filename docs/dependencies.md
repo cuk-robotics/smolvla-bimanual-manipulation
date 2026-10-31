@@ -26,6 +26,15 @@ python scripts/check_config.py
 python -m unittest discover -s tests -v
 ```
 
+영상 합성과 LeRobot v3 데이터 내보내기 검사는 NumPy·Pillow·PyArrow를 사용합니다. 장치 연결 없이 이 검사도 실행하려면 별도 검사 환경에 다음 고정 의존성을 설치합니다. CI의 Ubuntu/Windows·Python 3.12도 같은 파일을 사용합니다.
+
+```text
+python -m pip install --only-binary=:all: -r requirements/test-data.txt
+python -m unittest discover -s tests -v
+```
+
+CI는 설치 전에 `python -S -m unittest discover -s tests -v`로 선택 의존성이 없는 경로도 확인합니다. 데이터 검사 환경에는 LeRobot을 설치하지 않으므로 공식 CLI 통합 검사는 건너뜁니다. 전체 LeRobot 환경에서는 해당 검사도 실행하며 모터·카메라·Hub 호출은 테스트에서 대체합니다. 이 검사는 실제 장치 구동 검증과 구분합니다.
+
 새 장치 실행 환경에서는 아래 선택 의존성을 설치합니다. 현재 정상 환경에 다시 설치할 필요는 없습니다.
 
 ```bat
