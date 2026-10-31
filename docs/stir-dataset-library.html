@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="SO-101 젓기 데이터셋 다운로드 안내. 커피 25개와 말차라떼 25개를 합친 원본·마스크 버전을 Hugging Face에서 다운로드하세요.">
+  <title>젓기 데이터셋 다운로드 | SO-101</title>
+  <style>
+    :root{--page:#f5f6f4;--paper:#fff;--ink:#20302b;--muted:#61716a;--line:#dce3dd;--accent:#2f624e;--tint:#eaf0eb}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;font-size:15px;line-height:1.7;word-break:keep-all;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-underline-offset:4px}
+    a:focus-visible,summary:focus-visible{outline:3px solid #2878b5;outline-offset:5px}
+    .shell{width:min(960px,calc(100% - 64px));margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;gap:16px;padding:25px 0;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.09em;color:var(--muted)}
+    .brand{font-weight:750;color:var(--ink)}
+    header{padding:44px 0 28px}
+    .eyebrow{margin:0 0 10px;color:var(--accent);font-size:11px;font-weight:750;letter-spacing:.13em}
+    h1{margin:0 0 13px;font-size:clamp(28px,4.4vw,42px);line-height:1.3;letter-spacing:-.045em}
+    .intro{margin:0;color:var(--muted);font-size:14px}
+    .facts{display:flex;flex-wrap:wrap;gap:8px;margin:23px 0 0;padding:0;list-style:none}
+    .facts li{padding:4px 11px;border:1px solid var(--line);border-radius:5px;background:#eff2ed;font-size:11px;color:#4d6055}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .card{display:flex;flex-direction:column;min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:27px 28px}
+    .card-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:22px}
+    .badge{font-size:10px;letter-spacing:.12em;font-weight:750;padding:4px 9px;border-radius:4px;background:#eef1ef;color:#52645b}
+    .masked .badge{background:var(--tint);color:var(--accent)}
+    .size{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+    h2{margin:0 0 9px;font-size:23px;line-height:1.4;letter-spacing:-.035em}
+    .desc{margin:0;color:var(--muted);font-size:13px}
+    .count{display:flex;align-items:baseline;gap:7px;margin:25px 0 24px;font-size:12px;color:var(--muted)}
+    .count strong{font-size:35px;line-height:1;color:var(--ink);font-weight:700;letter-spacing:-.04em}
+    .count span{margin-left:auto;font-size:11px}
+    .button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:47px;padding:11px 15px;background:var(--accent);border:1px solid var(--accent);border-radius:6px;color:white;text-decoration:none;font-size:13px;font-weight:700;margin-top:auto}
+    .button:hover{background:#244f3e}
+    .button span{font-family:system-ui,sans-serif;font-size:17px;line-height:1}
+    .secondary{display:block;width:fit-content;margin:12px auto 0;font-size:11px;color:var(--muted)}
+    .note{margin:16px 2px 0;font-size:12px;color:var(--muted)}
+    .guide{margin-top:27px;padding:24px 27px;border:1px solid var(--line);border-radius:10px;background:#eef2ed}
+    .guide h2{font-size:16px;margin-bottom:10px}
+    .guide ol{padding-left:21px;margin:0;font-size:13px;color:#4d6055}
+    .guide li+li{margin-top:5px}
+    details{margin-top:20px;border-top:1px solid #d9e0d9;padding-top:16px}
+    summary{cursor:pointer;font-size:12px;font-weight:650;width:fit-content}
+    .download-all{padding-top:12px;font-size:12px;color:#4d6055}
+    .download-all p{margin:0 0 10px}
+    .command-label{display:block;margin:13px 0 5px;font-weight:700;color:var(--ink)}
+    pre{margin:0;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:#fff;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all;font-size:11px;line-height:1.8}
+    code{font-family:Consolas,"SFMono-Regular",monospace}
+    .spec{margin:24px 2px 0;font-size:12px;color:var(--muted)}
+    .spec strong{color:#43574b;font-weight:650}
+    footer{display:flex;justify-content:space-between;gap:18px;margin-top:29px;padding:20px 0 28px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+    @media(max-width:620px){.shell{width:calc(100% - 32px)}.topbar{padding:20px 0;font-size:10px}header{padding-top:31px}.intro br{display:none}.cards{grid-template-columns:1fr;gap:14px}.card{padding:23px}.card-top{margin-bottom:17px}.guide{padding:21px}.count{margin:22px 0}footer{flex-direction:column;gap:3px}.spec{line-height:1.85}}
+    @media print{body{background:#fff}.shell{width:100%}.card{break-inside:avoid}.button{background:#fff;color:var(--accent)}details{display:none}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar"><span class="brand">SO-101 / DATA LIBRARY</span><span>2026.10.31</span></div>
+    <main>
+      <header>
+        <p class="eyebrow">STIRRING · COFFEE &amp; MATCHA LATTE</p>
+        <h1>젓기 데이터셋 다운로드</h1>
+        <p class="intro">커피 25개와 말차라떼 25개를 모은 데이터셋입니다.<br> Top view의 마스크 적용 여부에 따라 원하는 버전을 선택하세요.</p>
+        <ul class="facts" aria-label="공통 구성">
+          <li>각 50개 에피소드</li><li>각 66,984프레임</li><li>카메라 3대</li><li>LeRobot v3.0</li>
+        </ul>
+      </header>
+
+      <section class="cards" aria-label="다운로드 버전 선택">
+        <article class="card raw" aria-labelledby="raw-title">
+          <div class="card-top"><span class="badge">RAW</span><span class="size">약 1.43 GB</span></div>
+          <h2 id="raw-title">마스크 없는 원본</h2>
+          <p class="desc">Top view에 작업대 배경이 그대로 보입니다.<br>배경을 포함한 영상이 필요할 때 선택하세요.</p>
+          <div class="count"><strong>50</strong> 에피소드<span>커피 25 · 말차라떼 25</span></div>
+          <a class="button" href="https://huggingface.co/datasets/lmsforAI/so101_stir_merged50_20261031_raw/tree/v3.0" target="_blank" rel="noopener noreferrer" aria-label="원본 버전 파일 목록과 다운로드 열기, 새 탭">파일 목록 · 다운로드 <span aria-hidden="true">↗</span></a>
+          <a class="secondary" href="https://huggingface.co/datasets/lmsforAI/so101_stir_merged50_20261031_raw" target="_blank" rel="noopener noreferrer">데이터셋 설명 보기</a>
+        </article>
+
+        <article class="card masked" aria-labelledby="masked-title">
+          <div class="card-top"><span class="badge">MASKED</span><span class="size">약 1.30 GB</span></div>
+          <h2 id="masked-title">마스크 적용본</h2>
+          <p class="desc">Top view의 고정된 바닥 영역을 가렸습니다.<br>바닥 마스크를 적용한 영상이 필요할 때 선택하세요.</p>
+          <div class="count"><strong>50</strong> 에피소드<span>커피 25 · 말차라떼 25</span></div>
+          <a class="button" href="https://huggingface.co/datasets/lmsforAI/so101_stir_merged50_20261031_masked/tree/v3.0" target="_blank" rel="noopener noreferrer" aria-label="마스크 버전 파일 목록과 다운로드 열기, 새 탭">파일 목록 · 다운로드 <span aria-hidden="true">↗</span></a>
+          <a class="secondary" href="https://huggingface.co/datasets/lmsforAI/so101_stir_merged50_20261031_masked" target="_blank" rel="noopener noreferrer">데이터셋 설명 보기</a>
+        </article>
+      </section>
+
+      <p class="note">두 버전은 같은 50개 시연입니다. 손목 영상과 관절 데이터는 같고, Top view만 다릅니다.</p>
+
+      <section class="guide" aria-labelledby="download-title">
+        <h2 id="download-title">다운로드 방법</h2>
+        <ol>
+          <li>원하는 버전의 <strong>파일 목록 · 다운로드</strong>를 누르면 Hugging Face가 새 탭에서 열립니다.</li>
+          <li>폴더 안에서 필요한 파일을 열고 다운로드 화살표(↓)를 눌러 저장하세요.</li>
+        </ol>
+        <details>
+          <summary>전체 데이터셋을 한 번에 받기 · 터미널</summary>
+          <div class="download-all">
+            <p>CMD·PowerShell·Linux 터미널에서 원하는 버전의 명령을 실행하세요. 현재 폴더 아래에 영상·관절 데이터·메타데이터가 함께 저장됩니다.</p>
+            <p><code>hf</code>가 설치되어 있지 않다면 먼저 <code>python -m pip install huggingface_hub</code>를 실행하세요.</p>
+            <span class="command-label">원본 · 약 1.43 GB</span>
+            <pre><code>hf download lmsforAI/so101_stir_merged50_20261031_raw --repo-type dataset --revision v3.0 --local-dir so101_stir_merged50_20261031_raw</code></pre>
+            <span class="command-label">마스크 · 약 1.30 GB</span>
+            <pre><code>hf download lmsforAI/so101_stir_merged50_20261031_masked --repo-type dataset --revision v3.0 --local-dir so101_stir_merged50_20261031_masked</code></pre>
+            <p style="margin-top:12px">학습용 전체 데이터는 폴더 구조를 유지해 사용하세요. <a href="https://huggingface.co/docs/huggingface_hub/guides/cli#hf-download" target="_blank" rel="noopener noreferrer">공식 다운로드 안내 ↗</a></p>
+          </div>
+        </details>
+      </section>
+
+      <p class="spec"><strong>영상 구성</strong> &nbsp;왼손목 · 오른손목 · Top view / 640×480 · 명목 30 FPS · AV1 압축<br>50회 전체 동작 시간은 약 37분 13초이며, 각 버전의 용량에는 카메라 3대의 영상이 포함됩니다.</p>
+    </main>
+    <footer><span>2026 CAPSTONE · SO-101 BIMANUAL MANIPULATION</span><span>공개 데이터셋 · v3.0 · 영상 파일 일치 검증 완료</span></footer>
+  </div>
+</body>
+</html>
