@@ -9,6 +9,7 @@ import math
 import os
 import sys
 import time
+from contextlib import nullcontext
 from pathlib import Path
 
 import draccus
@@ -70,9 +71,15 @@ def install_camera_layout():
             if len(paths) != 1:
                 raise RuntimeError(f"Expected one image for {name}, got {paths}")
             views[name] = blueprint.Spatial2DView(origin=paths[0], name=label)
+        top_views = [views["top"]]
+        raw_paths = [path for path in image_paths if path.rsplit(".", 1)[-1] == "top_raw"]
+        if raw_paths:
+            if len(raw_paths) != 1:
+                raise RuntimeError(f"Expected one top_raw image, got {raw_paths}")
+            top_views.append(blueprint.Spatial2DView(origin=raw_paths[0], name="Top raw (background)"))
         layout = blueprint.Vertical(
             blueprint.Horizontal(views["left_wrist"], views["right_wrist"], column_shares=[1, 1]),
-            views["top"],
+            blueprint.Horizontal(*top_views),
             row_shares=[1, 1],
         )
         return blueprint.Blueprint(layout, auto_layout=False, auto_views=False, collapse_panels=True)
@@ -124,13 +131,16 @@ def main():
     parser.add_argument("--policy-path", type=Path, help="Local inference checkpoint directory")
     parser.add_argument("--dataset-root", type=Path, help="Existing local dataset for record --resume or inference verification")
     parser.add_argument("--resume", action="store_true", help="Append to the exact --repo-id and existing --dataset-root; --episodes is the additional count")
+    parser.add_argument("--top-overlay", type=Path, help="Record only: RGBA overlay; save masked top and same-frame top_raw. Requires unmasked OBS input.")
+    parser.add_argument("--raw-top-input", action="store_true", help="Acknowledge that OBS virtual camera outputs an unmasked top scene; required with --top-overlay")
     parser.add_argument("--expected-episodes", type=int, help="With --resume, refuse to start if the saved episode count differs")
     parser.add_argument("--device", choices=("cuda", "cpu"), default="cuda", help="Inference device")
     parser.add_argument("--no-target-limit", action="store_true", help="Infer only: disable max_relative_target for both arms in this session")
     parser.add_argument("--return-to-initial-position", action="store_true", help="Infer only: return both arms and grippers to the startup joint positions before disconnecting, including after Ctrl+C")
     parser.add_argument("--repo-id", help="Dataset ID; uploads append a unique session timestamp")
-    parser.add_argument("--push-to-hub", action="store_true", help="Upload saved record episodes on exit; default is local recording only")
-    parser.add_argument("--private", action="store_true", help="Make the new uploaded dataset private; requires record --push-to-hub")
+    parser.add_argument("--push-to-hub", action="store_true", help="Upload saved record episodes on exit; paired top uploads separate _raw/_masked datasets; default is local only")
+    parser.add_argument("--prepare-hub", action="store_true", help="Paired record only: prepare both local Hub datasets after recording, then stop without uploading")
+    parser.add_argument("--private", action="store_true", help="Use private visibility with record --push-to-hub or --prepare-hub")
     parser.add_argument("--task")
     parser.add_argument("--episodes", type=int)
     parser.add_argument("--episode-seconds", type=float)
@@ -140,6 +150,21 @@ def main():
     if options.mode == "practice" and options.wrist_fourcc is None:
         options.wrist_fourcc = "MJPG"
     BASE = options.project_root.resolve()
+    if options.top_overlay is not None and (options.mode != "record" or not options.raw_top_input):
+        parser.error("--top-overlay requires record and --raw-top-input. Set OBS virtual camera to the unmasked scene first.")
+    if options.raw_top_input and options.top_overlay is None:
+        parser.error("--raw-top-input requires --top-overlay.")
+    if options.prepare_hub and (options.mode != "record" or options.top_overlay is None):
+        parser.error("--prepare-hub requires record and --top-overlay.")
+    if options.prepare_hub and options.push_to_hub:
+        parser.error("--prepare-hub and --push-to-hub are mutually exclusive.")
+    overlay = None
+    if options.top_overlay is not None:
+        from cuk_robotics.teleoperation.top_pair import TopOverlay
+        top = camera_profiles(options.wrist_fourcc)["top"]
+        overlay = TopOverlay(options.top_overlay, (top["height"], top["width"], 3))
+        print("PAIRED TOP: OBS input must be unmasked. top=overlay, top_raw=original, both from one observation.", flush=True)
+        print(f"Overlay SHA-256: {overlay.sha256}", flush=True)
     if options.resume and (options.mode != "record" or options.dataset_root is None or not options.repo_id or not options.task or options.episodes is None):
         parser.error("--resume requires record, --dataset-root, exact --repo-id, --task and additional --episodes.")
     if options.expected_episodes is not None and (not options.resume or options.expected_episodes < 1):
@@ -171,8 +196,8 @@ def main():
         parser.error("--return-to-initial-position is only available for infer.")
     if options.push_to_hub and options.mode != "record":
         parser.error("--push-to-hub is only available for record.")
-    if options.private and not options.push_to_hub:
-        parser.error("--private requires record --push-to-hub.")
+    if options.private and not (options.push_to_hub or options.prepare_hub):
+        parser.error("--private requires record --push-to-hub or --prepare-hub.")
     if options.wrist_fourcc is not None:
         print(f"Wrist camera USB format override: {options.wrist_fourcc}. Configuration files are unchanged; Rerun still receives raw images.", flush=True)
         if options.mode == "record" and options.wrist_fourcc == "MJPG":
@@ -221,10 +246,17 @@ def main():
         record_args, root, target_repo = build_recording_args(
             BASE, repo, task, episodes=episodes, episode_seconds=seconds,
             reset_seconds=reset_seconds, fps=options.fps if options.fps is not None else 30,
-            push_to_hub=options.push_to_hub, private=options.private,
+            push_to_hub=options.push_to_hub or options.prepare_hub, private=options.private,
             resume=options.resume, dataset_root=options.dataset_root,
             expected_episodes=options.expected_episodes,
         )
+        if overlay is not None and (options.push_to_hub or options.prepare_hub):
+            from cuk_robotics.paired_upload import paired_repo_ids
+            paired_repos = paired_repo_ids(target_repo)
+            # The four-video collection stays local. Publish two three-video exports
+            # only after the official recorder finalizes and disconnects devices.
+            record_args = ["--dataset.push_to_hub=false" if arg == "--dataset.push_to_hub=true" else arg
+                           for arg in record_args]
         args.extend(record_args)
         print(f"Local dataset output: {root}", flush=True)
         if options.resume:
@@ -236,9 +268,18 @@ def main():
             print(f"Resume: {saved} saved + {episodes} additional = {saved + episodes} planned; next episode_index={saved}.", flush=True)
         upload = ("private" if options.private else "public") if options.push_to_hub else "disabled"
         print(f"Recording: {episodes} episodes; maximum {seconds}s each; reset {reset_seconds}s; {options.fps if options.fps is not None else 30} FPS; upload {upload}.", flush=True)
-        if options.push_to_hub:
-            print(f"Hub destination on recording exit: https://huggingface.co/datasets/{target_repo}", flush=True)
-            print("Resume uses the exact existing Hub ID; new recordings use a separate session ID. Validation does not upload or create a repository.", flush=True)
+        if options.push_to_hub or options.prepare_hub:
+            destinations = paired_repos if overlay is not None else {"dataset": target_repo}
+            for variant, destination in destinations.items():
+                print(f"Hub destination on recording exit ({variant}): https://huggingface.co/datasets/{destination}", flush=True)
+            if overlay is not None:
+                print("Four-video collection upload disabled; both three-camera variants will be prepared after device disconnection.", flush=True)
+            if options.prepare_hub:
+                print("PREPARE ONLY: both local exports will stop at prepared; no Hub API calls or remote repository creation.", flush=True)
+            if overlay is not None:
+                print("Resume uses the exact base ID with _raw/_masked destinations; new recordings add a session timestamp. Validation never uploads.", flush=True)
+            else:
+                print("Resume uses the exact existing Hub ID; new recordings use a separate session ID. Validation does not upload or create a repository.", flush=True)
 
     config = draccus.parse(config_class=config_class, args=args)
     from cuk_robotics.teleoperation.console_logging import readable_console
@@ -260,11 +301,21 @@ def main():
             official.main()
         return
     if options.validate_only:
+        if overlay is not None and options.resume:
+            from cuk_robotics.teleoperation.top_pair import paired_top_recording
+            with paired_top_recording(official, overlay, root, resume=True):
+                pass
         if not config.display_data or config.display_mode != "rerun":
             raise ValueError("The three-camera display must be enabled in Rerun mode.")
-        build(set(), set(), {f"observation.{name}" for name in camera_profiles()})
-        print(f"Validated official {options.mode} configuration and three-camera layout. No hardware connected.")
+        image_paths = {f"observation.{name}" for name in camera_profiles()}
+        if overlay is not None:
+            image_paths.add("observation.top_raw")
+        build(set(), set(), image_paths)
+        layout_label = "paired-top four-view" if overlay is not None else "three-camera"
+        print(f"Validated official {options.mode} configuration and {layout_label} layout. No hardware connected.")
         print("Cameras:", ", ".join(config.robot.cameras))
+        if overlay is not None:
+            print("Saved video features: left_wrist, right_wrist, top (masked), top_raw (unmasked)")
         print("Camera USB formats:", {name: camera.fourcc or "auto" for name, camera in config.robot.cameras.items()})
         print("Rate:", config.fps if options.mode == "practice" else config.dataset.fps)
         print(f"Display: raw images; target {options.display_fps} updates/s; renderer={options.rerun_renderer or 'SDK default'}")
@@ -275,10 +326,30 @@ def main():
     args.extend(["--display_ip=127.0.0.1", f"--display_port={port}"])
     # The official CLI entry point still owns the control and recording loops.
     sys.argv = [f"lerobot-{options.mode}", *args]
-    with readable_console(official, verbose=options.verbose_target_warnings,
+    pair_context = nullcontext()
+    if overlay is not None:
+        from cuk_robotics.teleoperation.top_pair import paired_top_recording
+        pair_context = paired_top_recording(official, overlay, root, resume=options.resume)
+    with pair_context, readable_console(official, verbose=options.verbose_target_warnings,
                           dataset=config.dataset if options.mode == "record" else None,
                           episode_offset=saved if options.mode == "record" and options.resume else 0):
         official.main()
+
+    if overlay is not None and (options.push_to_hub or options.prepare_hub):
+        info_path = root / "meta/info.json"
+        if not info_path.is_file() or json.loads(info_path.read_text(encoding="utf-8")).get("total_episodes", 0) < 1:
+            print("No saved paired-top episodes; skipping both uploads.", flush=True)
+            return
+        from cuk_robotics.paired_upload import publish_top_variants
+        export_dir = BASE / "data/top_variants" / target_repo / f"export_{time.time_ns()}"
+        print(f"Preparing raw/masked Hub datasets in: {export_dir}", flush=True)
+        published = publish_top_variants(root, target_repo, export_dir, push_to_hub=options.push_to_hub,
+                                         prepare_only=options.prepare_hub, private=options.private)
+        for variant, result in published.items():
+            if options.prepare_hub:
+                print(f"Prepared {variant}: {result['output']} -> {result['repo_id']} (NOT uploaded)", flush=True)
+            else:
+                print(f"Uploaded {variant}: https://huggingface.co/datasets/{result['repo_id']}", flush=True)
 
 
 if __name__ == "__main__":
