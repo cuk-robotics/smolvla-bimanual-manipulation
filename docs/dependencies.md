@@ -26,7 +26,7 @@ python scripts/check_config.py
 python -m unittest discover -s tests -v
 ```
 
-영상 합성과 LeRobot v3 데이터 내보내기 검사는 NumPy·Pillow·PyArrow를 사용합니다. 장치 연결 없이 이 검사도 실행하려면 별도 검사 환경에 다음 고정 의존성을 설치합니다. CI의 Ubuntu/Windows·Python 3.12도 같은 파일을 사용합니다.
+영상 합성과 LeRobot v3 데이터 내보내기 검사는 NumPy·Pillow·PyArrow를 사용하고, 워크플로 구문 검사는 PyYAML을 사용합니다. 장치 연결 없이 이 검사도 실행하려면 별도 검사 환경에 다음 고정 의존성을 설치합니다. CI의 Ubuntu/Windows·Python 3.12도 같은 파일을 사용합니다.
 
 ```text
 python -m pip install --only-binary=:all: -r requirements/test-data.txt

@@ -1,5 +1,6 @@
-# CPU-only helpers used by the hardware-free data and overlay tests.
+# Helpers used by the hardware-free data, overlay, and workflow tests.
 # Verified with Python 3.12; no LeRobot, model weights, or device drivers.
 numpy==2.2.6
 Pillow==12.3.0
 pyarrow==25.0.1
+PyYAML==6.0.3
