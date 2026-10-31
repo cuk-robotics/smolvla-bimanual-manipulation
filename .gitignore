@@ -68,6 +68,8 @@ id_dsa
 /PROJECT_CONTEXT.md
 /PROJECT_CONTEXT.local.md
 /RUN_GUIDE.local.md
+*.local.md
+/docs/local/
 /GEMINI_TO_CODEX.md
 .codex/
 .agents/

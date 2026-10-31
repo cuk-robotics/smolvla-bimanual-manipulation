@@ -23,9 +23,9 @@ frame 330(11초)에는 열린 두 손가락 사이에 통이 위치하고, frame
 이 한 시연의 시점은 현재 추론의 고정 동작 시간이나 성공 판정 기준이 아닙니다.
 근거 영상과 state/action은 `outputs/inference_matcha_w6_preflight/powder_grasp_reference/`에 있습니다.
 
-- [접촉 전 탑뷰](../../outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0330_top.png)
-- [접촉 전 손목뷰](../../outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0330_right_wrist.png)
-- [파지 시 탑뷰](../../outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0390_top.png)
+- 접촉 전 탑뷰 (로컬 보관: `outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0330_top.png`)
+- 접촉 전 손목뷰 (로컬 보관: `outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0330_right_wrist.png`)
+- 파지 시 탑뷰 (로컬 보관: `outputs/inference_matcha_w6_preflight/powder_grasp_reference/frame_0390_top.png`)
 
 이 원본 시연에서 통을 잡는 팔의 근접 영상은 `right_wrist`, 대기 팔의 근접 영상은 `left_wrist`입니다.
 사용자는 현재 추론 화면에서도 움직이는 그리퍼가 `right_wrist`에 표시된다고 확인했습니다.
@@ -214,8 +214,8 @@ Set-Location 'E:\Desktop\smolvla-bimanual-manipulation'
 원본 가루 검증 episode 4의 시작(frame 0)과 중간(frame 789)을 대조하면, 탑뷰 화면 오른쪽 팔이 가루통을 집어 붓습니다.
 해당 두 프레임의 right_* 상태 6개는 같고 left_* 상태만 바뀌므로, 이 원본 화면의 오른쪽 팔은 논리 왼팔입니다.
 사용자가 본 팔이 이 팔과 같다면 가루 작업에서 접근할 팔은 맞습니다. 화면 좌우만 보고 매핑을 교체하지 않습니다.
-현재 배치 비교용으로 [시연 시작 탑뷰](../../outputs/inference_matcha_w6_preflight/powder_start_reference/top.png)와
-[가루 붓기 중간 장면](../../outputs/inference_matcha_w6_preflight/powder_start_reference/top_mid.png)을 원본에서 추출했습니다.
+현재 배치 비교용으로 시연 시작 탑뷰 (로컬 보관: `outputs/inference_matcha_w6_preflight/powder_start_reference/top.png`)와
+가루 붓기 중간 장면 (로컬 보관: `outputs/inference_matcha_w6_preflight/powder_start_reference/top_mid.png`)을 원본에서 추출했습니다.
 
 로그의 1.2/3.1/3.0 Hz는 지연된 개별 루프의 dt 역수입니다. 전체 시험 평균 주파수로 해석하지 않습니다.
 저장된 가루 시작 관측을 고정하여 101회 측정한 공식 동기 추론에서 새 묶음 생성은 첫 0.782초·이후 약 0.35초,

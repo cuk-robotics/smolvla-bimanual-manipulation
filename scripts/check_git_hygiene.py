@@ -20,6 +20,7 @@ EXPECTED_IGNORED = (
     "build/lib/cuk_robotics/__init__.py", "dist/package.whl", "package.whl",
     "model.7z", "local_bundle.zip", ".venv/pyvenv.cfg", "src/__pycache__/module.pyc",
     ".pytest_cache/state", "notes.md.bak", "viewer.dmp",
+    "docs/local/commands.md", "docs/local/archive/experiment.md", "session.local.md",
 )
 EXPECTED_SHARED = (
     "README.md", "docs/operations.md", "docs/recording.md", "docs/inference.md",
@@ -30,6 +31,11 @@ EXPECTED_SHARED = (
     "configs/recording/beverage.json", "tests/test_operation.py",
     "requirements/constraints-windows.txt", "templates/dataset_card.md",
     ".env.example", ".env.production.example", "assets/example.png", "id_ed25519.pub",
+    "docs/datasets.md", "docs/paired-top-recording.md", "docs/stir-dataset-library.html",
+    "scripts/export_top_variant.py", "scripts/publish_top_variants.py",
+    "src/cuk_robotics/top_variants.py", "src/cuk_robotics/paired_upload.py",
+    "src/cuk_robotics/teleoperation/top_pair.py", "tests/test_top_pair.py",
+    "tests/test_top_variants.py", "tests/test_paired_upload.py",
 )
 PATTERNS = {
     "hugging_face_token": re.compile(r"\bhf_[A-Za-z0-9]{20,}\b"),

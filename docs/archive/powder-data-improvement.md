@@ -94,11 +94,11 @@ SmolVLA 공식 문서는 약 50개를 출발점으로 제시하며, 예시에서
 
 ## 재현 자료
 
-- [수치 점검](../../outputs/inference_matcha_w6_preflight/collection_audit/audit.json)
-- [50개 시연 검토표](../../outputs/inference_matcha_w6_preflight/collection_audit/episode_review.csv)
-- [12개 시연 영상 표본](../../outputs/inference_matcha_w6_preflight/collection_audit/review.html)
-- [파지 구간 예측 검사](../../outputs/inference_matcha_w6_preflight/collection_audit/grasp_prediction_check.json)
-- [영상 대조 후 9개 시연 집계](../../outputs/inference_matcha_w6_preflight/collection_audit/grasp_prediction_reviewed_summary.json)
+- 수치 점검 (로컬 보관: `outputs/inference_matcha_w6_preflight/collection_audit/audit.json`)
+- 50개 시연 검토표 (로컬 보관: `outputs/inference_matcha_w6_preflight/collection_audit/episode_review.csv`)
+- 12개 시연 영상 표본 (로컬 보관: `outputs/inference_matcha_w6_preflight/collection_audit/review.html`)
+- 파지 구간 예측 검사 (로컬 보관: `outputs/inference_matcha_w6_preflight/collection_audit/grasp_prediction_check.json`)
+- 영상 대조 후 9개 시연 집계 (로컬 보관: `outputs/inference_matcha_w6_preflight/collection_audit/grasp_prediction_reviewed_summary.json`)
 
 `outputs` 자료는 로컬 분석 결과이며 저장소의 ignore 대상이다. 자동 임계값은 사람 검토의 위치를 찾는 용도다. 실물 성공·전체 영상 품질·기구 오차를 인증하는 자동 검사는 아니다.
 
